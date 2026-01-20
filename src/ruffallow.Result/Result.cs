@@ -106,6 +106,25 @@ public sealed class Result<T, TE>
     }
 
     /// <summary>
+    /// Matches the result and returns a value of type <typeparamref name="TResult"/>.
+    /// </summary>
+    /// <param name="onSuccess"></param>
+    /// <param name="onFailure"></param>
+    /// <typeparam name="TResult"></typeparam>
+    /// <returns></returns>
+    public TResult Match<TResult>(
+        Func<T, TResult> onSuccess,
+        Func<TE, TResult> onFailure)
+    {
+        ArgumentNullException.ThrowIfNull(onSuccess);
+        ArgumentNullException.ThrowIfNull(onFailure);
+    
+        return IsSuccess
+            ? onSuccess(Value!)
+            : onFailure(Error!);
+    }
+
+    /// <summary>
     /// Returns the success value or throws if the result is a failure.
     /// </summary>
     public T Unwrap()
